@@ -322,11 +322,15 @@
       color: var(--text);
     }
 
-    .stack-dot {
-      width: 6px; height: 6px;
+    .stack-item-name::before {
+      content: '';
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--accent);
       flex-shrink: 0;
+      display: inline-block;
+      margin-right: 12px;
     }
 
     .stack-item-tag {
@@ -788,15 +792,15 @@
         <h2 class="reveal">Production-ready<br><em>from day one</em></h2>
         <p class="section-sub reveal" style="margin-bottom:32px;">Every server ships with the same battle-tested configuration. No guesswork, no plugins to configure.</p>
         <ul class="stack-list reveal">
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>Nginx</span><span class="stack-item-tag">Web Server</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>PHP-FPM 8.3</span><span class="stack-item-tag">Runtime</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>MySQL 8.0</span><span class="stack-item-tag">Database</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>Redis 7</span><span class="stack-item-tag">Cache / Sessions</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>Varnish 7</span><span class="stack-item-tag">Full Page Cache</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>OpenSearch 2</span><span class="stack-item-tag">Search (Pro)</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>Cloudflare</span><span class="stack-item-tag">CDN / WAF / DDoS</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>Let&rsquo;s Encrypt</span><span class="stack-item-tag">SSL &mdash; Auto Renew</span></li>
-          <li class="stack-item"><span class="stack-item-name"><span class="stack-dot"></span>Fail2ban + UFW</span><span class="stack-item-tag">Security</span></li>
+          <li class="stack-item"><span class="stack-item-name">Nginx</span><span class="stack-item-tag">Web Server</span></li>
+          <li class="stack-item"><span class="stack-item-name">PHP-FPM 8.3</span><span class="stack-item-tag">Runtime</span></li>
+          <li class="stack-item"><span class="stack-item-name">MySQL 8.0</span><span class="stack-item-tag">Database</span></li>
+          <li class="stack-item"><span class="stack-item-name">Redis 7</span><span class="stack-item-tag">Cache / Sessions</span></li>
+          <li class="stack-item"><span class="stack-item-name">Varnish 7</span><span class="stack-item-tag">Full Page Cache</span></li>
+          <li class="stack-item"><span class="stack-item-name">OpenSearch 2</span><span class="stack-item-tag">Search (Pro)</span></li>
+          <li class="stack-item"><span class="stack-item-name">Cloudflare</span><span class="stack-item-tag">CDN / WAF / DDoS</span></li>
+          <li class="stack-item"><span class="stack-item-name">Let&rsquo;s Encrypt</span><span class="stack-item-tag">SSL &mdash; Auto Renew</span></li>
+          <li class="stack-item"><span class="stack-item-name">Fail2ban + UFW</span><span class="stack-item-tag">Security</span></li>
         </ul>
       </div>
       <div class="stack-visual reveal">
@@ -823,7 +827,7 @@
         </div>
         <div style="background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:16px 24px;">
           <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:8px;">Uptime last 30 days</div>
-          <div id="sparkline" style="display:flex;gap:3px;align-items:flex-end;height:32px;"></div>
+          <canvas id="sparkline" width="200" height="32"></canvas>
           <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);margin-top:8px;">99.97% uptime</div>
         </div>
       </div>
@@ -1016,15 +1020,16 @@
 <script>
   // Sparkline
   (function() {
-    var el = document.getElementById('sparkline');
-    if (!el) return;
-    var html = '';
+    var canvas = document.getElementById('sparkline');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width / 30;
     for (var i = 0; i < 30; i++) {
       var h = 20 + Math.floor(Math.random() * 12);
-      var color = Math.random() > 0.05 ? '#3dd68c' : '#f87171';
-      html += '<div style="flex:1;height:' + h + 'px;background:' + color + ';border-radius:2px;opacity:0.7"></div>';
+      ctx.fillStyle = Math.random() > 0.05 ? '#3dd68c' : '#f87171';
+      ctx.globalAlpha = 0.7;
+      ctx.fillRect(i * w + 1, 32 - h, w - 2, h);
     }
-    el.innerHTML = html;
   })();
 
   // FAQ
